@@ -1,0 +1,63 @@
+
+This document describes the process of making a new release of xrayutilities.
+It is therefore not relevant for users, but only for developers and (maybe to
+some extent also for) packagers.
+
+CHECK EVERYTHING
+================
+
+Is everything running fine? perform the tests and run the examples
+
+  # change the version in lib/xrayutilties/VERSION
+  # update copyright notice in doc/source/conf.py and README.md
+  pycodestyle lib
+  # allowed output is:
+lib/xrayutilities/materials/elements.py:36:1: E741 ambiguous variable name 'O'
+lib/xrayutilities/materials/elements.py:140:1: E741 ambiguous variable name 'I'
+lib/xrayutilities/materials/spacegrouplattice.py:991:31: E741 ambiguous variable name 'l'
+lib/xrayutilities/math/fit.py:93:80: E501 line too long (100 > 79 characters)
+lib/xrayutilities/math/fit.py:192:80: E501 line too long (90 > 79 characters)
+lib/xrayutilities/math/fit.py:266:80: E501 line too long (90 > 79 characters)
+lib/xrayutilities/math/fit.py:307:80: E501 line too long (90 > 79 characters)
+  # run the unit tests
+  tox
+
+
+PACKAGING
+=========
+
+GIT tagging
+-----------
+
+tag the version in the GIT repository and publish the version tag to Github
+
+  git tag -a vX -m "version X"
+  git push origin vX
+
+Tarball and wheel generation
+----------------------------
+
+A tarball and wheels for multiple platforms are generated in the Azure
+cibuildwheel pipeline
+(https://dev.azure.com/dominikkriegner/xrayutilities/_build). The deployment
+is done via a release pipeline on Azure.
+
+
+UPDATE DOCUMENTATION & WEBPAGE
+==============================
+
+to build the documentation from scratch first one needs to rebuild the API
+documentation sources (which is done from the installed module, so make sure
+you have the latest version installed!). The relevant commands and
+dependencies are found in .azure/azure-builddocs.yml which can be either
+triggered manually are should be run automatically if a new version tag is
+uploaded. The new documentation (pdf and html) are uploaded to be available at
+https://xrayutilities.sourceforge.io
+
+
+Github release and mailing list anouncement
+===========================================
+
+Finally announce the new release on Github (which will also upload the new
+version to Sourceforge) and drop a mail to the user mailinglist:
+xrayutilities-users@lists.sourceforge.net
